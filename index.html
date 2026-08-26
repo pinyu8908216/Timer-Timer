@@ -84,7 +84,7 @@
             gap: 0px;
         }
 
-        /* 上半部：固定隊伍卡片 */
+        /* 上半部：固定隊伍卡片（維持原比例大小） */
         .teams-wrapper {
             display: flex;
             width: 100%;
@@ -134,14 +134,14 @@
             text-align: center;
         }
 
-        /* 下半部：加粗時間軸區域（向上微移） */
+        /* 下半部：加粗時間軸區域（顯著向上推緊） */
         .timeline-wrapper {
             width: 100%;
             padding: 0;
             display: flex;
             align-items: center;
             position: relative;
-            margin-top: -12px; /* 向上移動時間軸間距 */
+            margin-top: -35px; /* 大幅向上移，縮減與上方框框的間距 */
         }
 
         .timeline-bar {
@@ -240,15 +240,15 @@
         <div class="teams-wrapper">
             <div class="team-card team-blue" onclick="passTurn('blue')">
                 <div class="team-name">藍隊</div>
-                <div class="time-display" id="blueTime">30</div>
+                <div class="time-display" id="blueTime">30.0</div>
             </div>
             <div class="team-card team-red" onclick="passTurn('red')">
                 <div class="team-name">紅隊</div>
-                <div class="time-display" id="redTime">30</div>
+                <div class="time-display" id="redTime">30.0</div>
             </div>
         </div>
 
-        <!-- 下半部：時間軸與 🔥 圖示 (已向上移動) -->
+        <!-- 下半部：時間軸與 🔥 圖示 (大幅向上移) -->
         <div class="timeline-wrapper">
             <div class="timeline-bar">
                 <div class="bar-blue" id="barBlue"></div>
@@ -280,7 +280,7 @@
         let stepTime = 1;
         let totalTime = 60;
         
-        let activeTeam = 'blue'; 
+        let activeTeam = 'blue'; // activeTeam 代表「正在發言（扣秒）」的隊伍
         let isRunning = false;
         let timerInterval = null;
 
@@ -291,9 +291,9 @@
         const pauseBtn = document.getElementById('pauseBtn');
 
         function updateDisplay() {
-            // 取整數無小數點
-            blueTimeEl.textContent = Math.ceil(blueTime);
-            redTimeEl.textContent = Math.ceil(redTime);
+            // 改回顯示小數點 1 位
+            blueTimeEl.textContent = blueTime.toFixed(1);
+            redTimeEl.textContent = redTime.toFixed(1);
 
             const bluePercent = (blueTime / totalTime) * 100;
             
@@ -339,19 +339,23 @@
         function passTurn(clickedTeam) {
             if (!isRunning) startTimer();
 
-            if (clickedTeam === 'blue') {
-                activeTeam = 'red';
-                blueTime += stepTime;
-                redTime -= stepTime;
-            } else if (clickedTeam === 'red') {
-                activeTeam = 'blue';
-                redTime += stepTime;
-                blueTime -= stepTime;
+            // 唯有按下「正在講話（扣秒）的隊伍」才會觸發講完話、切換給對方
+            // 如果按下的是正在「加秒」的隊伍，則完全無反應
+            if (clickedTeam === activeTeam) {
+                if (clickedTeam === 'blue') {
+                    activeTeam = 'red';
+                    blueTime += stepTime;
+                    redTime -= stepTime;
+                } else if (clickedTeam === 'red') {
+                    activeTeam = 'blue';
+                    redTime += stepTime;
+                    blueTime -= stepTime;
+                }
+
+                if (blueTime > totalTime) blueTime = totalTime;
+                if (redTime > totalTime) redTime = totalTime;
+                updateDisplay();
             }
-            
-            if (blueTime > totalTime) blueTime = totalTime;
-            if (redTime > totalTime) redTime = totalTime;
-            updateDisplay();
         }
 
         function resetGame() {
