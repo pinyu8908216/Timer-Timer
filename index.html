@@ -77,19 +77,18 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 16px 24px 24px 24px;
-            justify-content: flex-start;
+            padding: 12px 20px 20px 20px;
+            justify-content: space-between;
             align-items: center;
             height: calc(100vh - 60px);
-            gap: 10px; /* 縮減整體上下間距 */
         }
 
         /* 上半部：固定隊伍卡片 */
         .teams-wrapper {
             display: flex;
             width: 100%;
-            height: 52vh;
-            gap: 20px;
+            height: 54vh;
+            gap: 16px;
         }
 
         .team-card {
@@ -102,7 +101,7 @@
             cursor: pointer;
             transition: transform 0.1s;
             background-color: #ffffff;
-            padding: 5px;
+            padding: 0px;
         }
 
         .team-card:active {
@@ -110,29 +109,27 @@
         }
 
         .team-blue {
-            border: 7px solid #2196F3;
+            border: 8px solid #2196F3;
             color: #2196F3;
         }
 
         .team-red {
-            border: 7px solid #F44336;
+            border: 8px solid #F44336;
             color: #F44336;
         }
 
-        /* 隊伍字體放大10號 (1.8rem -> 2.4rem) */
         .team-name {
-            font-size: 2.4rem;
-            margin-bottom: 0px;
+            font-size: 3.2rem;
+            margin-bottom: -10px;
         }
 
-        /* 時間字體放大5號 (6.5rem -> 7.0rem) */
         .time-display {
-            font-size: 7rem;
+            font-size: 8.5rem;
             letter-spacing: 2px;
-            line-height: 1.1;
+            line-height: 1;
         }
 
-        /* 下半部：時間軸區域 (拉近與上方間距) */
+        /* 下半部：加粗時間軸區域 */
         .timeline-wrapper {
             width: 100%;
             padding: 10px 0 0 0;
@@ -143,43 +140,46 @@
 
         .timeline-bar {
             width: 100%;
-            height: 48px;
-            border-radius: 24px;
+            height: 96px;
+            border-radius: 48px;
             position: relative;
             display: flex;
+            align-items: center;
             overflow: visible;
-            border: 5px solid #000000;
+            border: 6px solid #000000;
             background-color: #F44336; /* 底色為紅 */
         }
 
         .bar-blue {
             height: 100%;
             background-color: #2196F3;
-            border-top-left-radius: 18px;
-            border-bottom-left-radius: 18px;
+            border-top-left-radius: 40px;
+            border-bottom-left-radius: 40px;
             width: 50%;
             transition: width 0.1s linear;
         }
 
-        /* 獨立放大 🔥 圖示（無圓圈，自帶白色描邊） */
+        /* 🔥 圖示 */
         .house-icon {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 4rem; /* 顯著放大火焰 */
+            font-size: 5.5rem;
             line-height: 1;
             transition: left 0.1s linear;
             z-index: 5;
-            /* 利用 drop-shadow 製作貼合火焰外框的強烈白邊 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             filter: 
-                drop-shadow(3px 0 0 #ffffff) 
-                drop-shadow(-3px 0 0 #ffffff) 
-                drop-shadow(0 3px 0 #ffffff) 
-                drop-shadow(0 -3px 0 #ffffff)
-                drop-shadow(2px 2px 0 #ffffff)
-                drop-shadow(-2px -2px 0 #ffffff)
-                drop-shadow(0px 4px 6px rgba(0,0,0,0.3));
+                drop-shadow(4px 0 0 #ffffff) 
+                drop-shadow(-4px 0 0 #ffffff) 
+                drop-shadow(0 4px 0 #ffffff) 
+                drop-shadow(0 -4px 0 #ffffff)
+                drop-shadow(3px 3px 0 #ffffff)
+                drop-shadow(-3px -3px 0 #ffffff)
+                drop-shadow(0px 6px 10px rgba(0,0,0,0.3));
             pointer-events: none;
         }
 
@@ -230,19 +230,19 @@
 
     <!-- 主內容區 -->
     <div class="main-container">
-        <!-- 上半部：固定卡片 (點擊切換) -->
+        <!-- 上半部：固定卡片 (按自己隊伍代表講完話，切換給對方) -->
         <div class="teams-wrapper">
-            <div class="team-card team-blue" onclick="transferTime('blue')">
+            <div class="team-card team-blue" onclick="passTurn('blue')">
                 <div class="team-name">藍隊</div>
                 <div class="time-display" id="blueTime">30.0</div>
             </div>
-            <div class="team-card team-red" onclick="transferTime('red')">
+            <div class="team-card team-red" onclick="passTurn('red')">
                 <div class="team-name">紅隊</div>
                 <div class="time-display" id="redTime">30.0</div>
             </div>
         </div>
 
-        <!-- 下半部：緊接在下的動態時間軸與 🔥 圖示 -->
+        <!-- 下半部：加粗時間軸與 🔥 圖示 -->
         <div class="timeline-wrapper">
             <div class="timeline-bar">
                 <div class="bar-blue" id="barBlue"></div>
@@ -275,7 +275,8 @@
         let stepTime = 1;
         let totalTime = 60;
         
-        let activeTeam = 'red';
+        // activeTeam 代表「目前正在講話（秒數正在扣除）」的隊伍
+        let activeTeam = 'blue'; 
         let isRunning = false;
         let timerInterval = null;
 
@@ -304,6 +305,7 @@
             pauseBtn.style.backgroundColor = "#ff9800";
 
             timerInterval = setInterval(() => {
+                // 當前發言的隊伍扣秒數，另一隊加秒數
                 if (activeTeam === 'blue') {
                     blueTime -= 0.1;
                     redTime += 0.1;
@@ -332,17 +334,22 @@
             }
         }
 
-        function transferTime(winner) {
+        // 點擊隊伍：代表該隊講完話，把回合交給對方
+        function passTurn(clickedTeam) {
             if (!isRunning) startTimer();
 
-            if (winner === 'blue') {
+            if (clickedTeam === 'blue') {
+                // 藍隊按了一下 -> 藍隊講完 -> 換紅隊開始扣時間
+                activeTeam = 'red';
+                // 可選擇性加上轉移秒數獎懲機制
                 blueTime += stepTime;
                 redTime -= stepTime;
+            } else if (clickedTeam === 'red') {
+                // 紅隊按了一下 -> 紅隊講完 -> 換藍隊開始扣時間
                 activeTeam = 'blue';
-            } else {
+                // 可選擇性加上轉移秒數獎懲機制
                 redTime += stepTime;
                 blueTime -= stepTime;
-                activeTeam = 'red';
             }
             
             if (blueTime > totalTime) blueTime = totalTime;
@@ -356,6 +363,7 @@
             blueTime = initTime;
             redTime = initTime;
             totalTime = initTime * 2;
+            activeTeam = 'blue'; // 預設先從藍隊開始
             pauseBtn.textContent = "開始遊戲";
             pauseBtn.style.backgroundColor = "#ff9800";
             updateDisplay();
