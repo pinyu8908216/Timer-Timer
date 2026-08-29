@@ -175,10 +175,9 @@
             background: #0066ff;
             border-top-left-radius: 999px;
             border-bottom-left-radius: 999px;
-            /* 移除 transition 徹底解決殘影 */
         }
 
-        /* 🔥 火焰圖示（修復殘影 + 新增黑色外框描邊） */
+        /* 🔥 火焰圖示（黑框微調至與時間軸同寬） */
         .house-icon {
             position: absolute;
             top: 50%;
@@ -190,26 +189,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* 移除 transition 避免移動殘影，並開啟 GPU 加速 */
             will-change: left;
             pointer-events: none;
             
-            /* 雙重描邊：內層白邊 + 最外層黑邊 + 陰影 */
+            /* 調整適中的黑框與白邊強度 */
             filter: 
-                /* 內層白色內描邊 */
+                /* 內層白色亮邊 */
                 drop-shadow(3px 0 0 #ffffff) 
                 drop-shadow(-3px 0 0 #ffffff) 
                 drop-shadow(0 3px 0 #ffffff) 
                 drop-shadow(0 -3px 0 #ffffff)
-                /* 外層黑色邊框 */
-                drop-shadow(6px 0 0 #000000) 
-                drop-shadow(-6px 0 0 #000000) 
-                drop-shadow(0 6px 0 #000000) 
-                drop-shadow(0 -6px 0 #000000)
-                drop-shadow(4px 4px 0 #000000)
-                drop-shadow(-4px -4px 0 #000000)
-                /* 底部立體陰影 */
-                drop-shadow(0 8px 12px rgba(0,0,0,0.4));
+                /* 外層黑色邊框（對齊時間軸 6px 描邊感） */
+                drop-shadow(3px 0 0 #000000) 
+                drop-shadow(-3px 0 0 #000000) 
+                drop-shadow(0 3px 0 #000000) 
+                drop-shadow(0 -3px 0 #000000)
+                drop-shadow(2px 2px 0 #000000)
+                drop-shadow(-2px -2px 0 #000000)
+                /* 立體陰影 */
+                drop-shadow(0 6px 10px rgba(0,0,0,0.3));
         }
 
         /* 設定彈窗 */
