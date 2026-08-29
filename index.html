@@ -16,7 +16,7 @@ content=“width=device-width, initial-scale=1.0, viewport-fit=cover”
 >
 <style>
 /* =========================================================
-   基礎
+   RESET
 ========================================================= */
 * {
     box-sizing: border-box;
@@ -31,35 +31,30 @@ content=“width=device-width, initial-scale=1.0, viewport-fit=cover”
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
-html {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
+html,
 body {
     width: 100%;
     height: 100%;
-    height: 100dvh;
     margin: 0;
+    overflow: hidden;
+}
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
     background: #ffffff;
     color: #333333;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 /* =========================================================
    HEADER
 ========================================================= */
 .header {
     width: 100%;
-    /*
-       固定 Header 高度
-       不讓它參與主畫面高度計算
-    */
     height: 58px;
     min-height: 58px;
-    padding:
-        0 2.8vw;
+    padding: 0 2.8vw;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -67,8 +62,7 @@ body {
     border-bottom:
         2px solid #eeeeee;
     box-shadow:
-        0 2px 10px
-        rgba(0,0,0,0.05);
+        0 2px 10px rgba(0,0,0,0.05);
     flex-shrink: 0;
     z-index: 10;
 }
@@ -96,10 +90,8 @@ body {
     padding:
         0 1.5vw;
     border-radius: 10px;
-    background:
-        #f0f0f0;
-    color:
-        #333333;
+    background: #f0f0f0;
+    color: #333333;
     border:
         1px solid #dddddd;
     font-size:
@@ -128,52 +120,45 @@ body {
 }
 /* =========================================================
    MAIN
-   這裡是這次最重要的修改。
-   Header 下面：
-   ┌──────────────────────┐
-   │                      │
-   │      TEAM AREA       │
-   │                      │
-   │──────────────────────│
-   │      TIMELINE        │
-   │──────────────────────│
-   │      約 1 cm 空間     │
-   └──────────────────────┘
-   使用 flex 讓 Team Area 自動吃滿所有剩餘高度。
+   Header 以下的所有高度
+   全部交給 Main。
+   底部固定預留 20px ≈ 2 公分。
 ========================================================= */
 .main-container {
     width: 100%;
-    /*
-       吃掉 Header 以下所有可用空間
-    */
-    flex: 1 1 auto;
+    flex:
+        1 1 auto;
     min-height: 0;
     /*
-       左右留白
-       上方只有少量空間
-       底部固定約 1 cm
+       上：12px
+       左右：3.2vw
+       下：20px
     */
     padding:
-        14px 3.2vw 10px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+        12px 3.2vw 20px;
+    display:
+        flex;
+    flex-direction:
+        column;
+    overflow:
+        hidden;
 }
 /* =========================================================
-   TEAM AREA
-   不設定 vh。
-   直接 flex: 1
-   → 自動填滿剩餘高度。
+   TEAMS
+   自動填滿剩餘空間
 ========================================================= */
 .teams-wrapper {
     width: 100%;
     flex:
         1 1 auto;
-    min-height: 0;
-    display: flex;
-    align-items: stretch;
+    min-height:
+        0;
+    display:
+        flex;
+    align-items:
+        stretch;
     gap:
-        2.6vw;
+        2.5vw;
 }
 /* =========================================================
    TEAM CARD
@@ -181,19 +166,26 @@ body {
 .team-card {
     flex:
         1 1 0;
-    min-width: 0;
-    min-height: 0;
+    min-width:
+        0;
+    min-height:
+        0;
     background:
         #ffffff;
     border-radius:
         22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display:
+        flex;
+    flex-direction:
+        column;
+    align-items:
+        center;
+    justify-content:
+        center;
     padding:
         10px;
-    cursor: pointer;
+    cursor:
+        pointer;
     transition:
         transform 0.1s;
 }
@@ -202,7 +194,7 @@ body {
         scale(0.98);
 }
 /* =========================================================
-   TEAM COLORS
+   COLORS
 ========================================================= */
 .team-blue {
     border:
@@ -229,7 +221,7 @@ body {
     line-height:
         1;
     margin-bottom:
-        1.6vh;
+        1.4vh;
     text-align:
         center;
     white-space:
@@ -237,7 +229,6 @@ body {
 }
 /* =========================================================
    TIMER
-   保留你上一版覺得 OK 的大小
 ========================================================= */
 .time-display {
     font-size:
@@ -256,17 +247,11 @@ body {
         nowrap;
 }
 /* =========================================================
-   TIMELINE AREA
-   不用 vh 決定位置。
-   只保留固定高度，
-   讓 Team Area 自動填滿。
+   TIMELINE WRAPPER
+   與計時器保持很近
 ========================================================= */
 .timeline-wrapper {
     width: 100%;
-    /*
-       時間軸本身約 9.2vh，
-       wrapper 稍微大一點讓火焰不被裁切。
-    */
     height:
         88px;
     min-height:
@@ -274,7 +259,7 @@ body {
     flex:
         0 0 88px;
     margin-top:
-        8px;
+        6px;
     display:
         flex;
     align-items:
@@ -284,7 +269,7 @@ body {
 }
 /* =========================================================
    TIMELINE
-   保持現在的粗度
+   維持目前確認的粗度
 ========================================================= */
 .timeline-bar {
     width: 100%;
@@ -310,7 +295,7 @@ body {
         #F44336;
 }
 /* =========================================================
-   BLUE
+   BLUE BAR
 ========================================================= */
 .bar-blue {
     width:
@@ -338,9 +323,6 @@ body {
         50%;
     transform:
         translate(-50%, -50%);
-    /*
-       火焰大小與 72px 時間軸匹配
-    */
     font-size:
         82px;
     line-height:
@@ -382,19 +364,13 @@ body {
         none;
 }
 /* =========================================================
-   iPad / LANDSCAPE
-   以可視高度重新調整文字，
-   但不改變時間軸粗度。
+   LANDSCAPE
 ========================================================= */
 @media
 (orientation: landscape) {
     .main-container {
-        /*
-           上方少量留白
-           底部約 1 cm
-        */
         padding:
-            12px 3.2vw 10px;
+            12px 3.2vw 20px;
     }
     .teams-wrapper {
         gap:
@@ -442,7 +418,7 @@ body {
     }
 }
 /* =========================================================
-   高度非常小的橫向畫面
+   VERY SHORT LANDSCAPE
 ========================================================= */
 @media
 (orientation: landscape)
@@ -467,7 +443,7 @@ and (max-height: 650px) {
     }
     .main-container {
         padding:
-            8px 20px 10px;
+            8px 20px 20px;
     }
     .team-name {
         font-size:
@@ -533,7 +509,7 @@ and (max-height: 650px) {
     }
     .main-container {
         padding:
-            10px 3vw 10px;
+            10px 3vw 20px;
     }
     .teams-wrapper {
         gap:
@@ -642,12 +618,10 @@ and (max-height: 650px) {
 </head>
 <body>
 <!-- =========================================================
-     HEADER
+     唯一的標題區
 ========================================================= -->
 <div class="header">
-<h1>
-    WenTeam Timer
-</h1>
+<h1>WenTeam Timer</h1>
 <div class="controls">
     <button
         class="btn-control btn-pause"
@@ -671,10 +645,8 @@ and (max-height: 650px) {
      MAIN
 ========================================================= -->
 <div class="main-container">
-<!-- =====================================================
-     TEAMS
-===================================================== -->
 <div class="teams-wrapper">
+    <!-- BLUE TEAM -->
     <div
         class="team-card team-blue"
         onclick="passTurn('blue')">
@@ -687,6 +659,7 @@ and (max-height: 650px) {
             30.0
         </div>
     </div>
+    <!-- RED TEAM -->
     <div
         class="team-card team-red"
         onclick="passTurn('red')">
@@ -700,9 +673,7 @@ and (max-height: 650px) {
         </div>
     </div>
 </div>
-<!-- =====================================================
-     TIMELINE
-===================================================== -->
+<!-- TIMELINE -->
 <div class="timeline-wrapper">
     <div class="timeline-bar">
         <div
@@ -718,16 +689,13 @@ and (max-height: 650px) {
 </div>
 </div>
 <!-- =========================================================
-     SETTINGS
+     SETTINGS MODAL
 ========================================================= -->
 <div
     class="modal"
     id="settingsModal">
 <div class="modal-content">
-    <h3
-        style="
-            text-align:center
-        ">
+    <h3 style="text-align:center">
         遊戲設定
     </h3>
     <label
@@ -814,7 +782,7 @@ const pauseBtn =
         'pauseBtn'
     );
 /* =========================================================
-   UPDATE DISPLAY
+   UPDATE
 ========================================================= */
 function updateDisplay() {
     blueTimeEl.textContent =
@@ -829,7 +797,7 @@ function updateDisplay() {
         bluePercent + "%";
 }
 /* =========================================================
-   START TIMER
+   START
 ========================================================= */
 function startTimer() {
     if (isRunning) return;
