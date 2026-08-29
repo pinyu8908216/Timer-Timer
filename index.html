@@ -72,23 +72,23 @@
             border: none;
         }
 
-        /* 主內容區域 */
+        /* 主內容區域：修復卡到與重疊的問題 */
         .main-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 12px 20px 10px 20px;
-            justify-content: flex-start; /* 靠上排列，避免內容被自動推開 */
+            padding: 15px 20px 20px 20px;
+            justify-content: space-between;
             align-items: center;
             height: calc(100vh - 55px);
-            gap: 0px;
+            gap: 15px; /* 使用固定精確間距，不重疊不踩界 */
         }
 
         /* 上半部：固定隊伍卡片 */
         .teams-wrapper {
             display: flex;
             width: 100%;
-            height: 58vh;
+            flex: 1;
             gap: 16px;
         }
 
@@ -127,26 +127,26 @@
         }
 
         .time-display {
-            font-size: 8.5rem;
+            font-size: 8rem;
             letter-spacing: 2px;
             line-height: 1;
             text-align: center;
         }
 
-        /* 下半部：進度條（大幅向上移，緊貼時間框） */
+        /* 下半部：進度條（鎖定位置防止重疊） */
         .timeline-wrapper {
             width: 100%;
             padding: 0;
             display: flex;
             align-items: center;
             position: relative;
-            margin-top: -65px; /* 再大幅向上推進 */
+            flex-shrink: 0; /* 防止進度條被壓縮或卡位 */
         }
 
         .timeline-bar {
             width: 100%;
-            height: 80px;
-            border-radius: 40px;
+            height: 76px;
+            border-radius: 38px;
             position: relative;
             display: flex;
             align-items: center;
@@ -158,8 +158,8 @@
         .bar-blue {
             height: 100%;
             background-color: #2196F3;
-            border-top-left-radius: 32px;
-            border-bottom-left-radius: 32px;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
             width: 50%;
             transition: width 0.1s linear;
         }
@@ -170,7 +170,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 5rem;
+            font-size: 4.8rem;
             line-height: 1;
             transition: left 0.1s linear;
             z-index: 5;
@@ -247,7 +247,7 @@
             </div>
         </div>
 
-        <!-- 下半部：進度條與 🔥 圖示 (大幅向上推進) -->
+        <!-- 下半部：進度條與 🔥 圖示 -->
         <div class="timeline-wrapper">
             <div class="timeline-bar">
                 <div class="bar-blue" id="barBlue"></div>
