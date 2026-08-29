@@ -4,938 +4,653 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WenTeam Timer</title>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Dela Gothic One", -apple-system, BlinkMacSystemFont, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        body {
-            background-color: #ffffff;
-            color: #333333;
-
-            display: flex;
-            flex-direction: column;
-
-            height: 100vh;
-            height: 100dvh;
-
-            overflow: hidden;
-        }
-
-        /* ========================================
-           頂部控制列
-        ======================================== */
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Dela Gothic One", -apple-system, BlinkMacSystemFont, sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    body {
+        background-color: #ffffff;
+        color: #333333;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    /* ==========================================
+       頂部
+    ========================================== */
+    .header {
+        height: 70px;
+        min-height: 70px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 28px;
+        background-color: #ffffff;
+        border-bottom: 2px solid #eeeeee;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        z-index: 10;
+        flex-shrink: 0;
+    }
+    .header h1 {
+        font-size: 1.55rem;
+        color: #222222;
+    }
+    .controls {
+        display: flex;
+        gap: 12px;
+    }
+    .btn-control {
+        background-color: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-control:active {
+        transform: scale(0.95);
+    }
+    .btn-pause {
+        background-color: #ff9800;
+        color: #ffffff;
+        border: none;
+    }
+    /* ==========================================
+       主畫面
+    ========================================== */
+    .main-container {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 28px 36px 24px;
+        overflow: hidden;
+    }
+    /* ==========================================
+       隊伍卡片
+    ========================================== */
+    .teams-wrapper {
+        width: 100%;
+        display: flex;
+        gap: 34px;
+        /*
+         * 卡片高度控制
+         * 不再把整個畫面吃滿
+         */
+        flex: 0 0 62%;
+        min-height: 0;
+    }
+    .team-card {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        border-radius: 24px;
+        cursor: pointer;
+        transition: transform 0.1s;
+        padding: 10px;
+    }
+    .team-card:active {
+        transform: scale(0.98);
+    }
+    .team-blue {
+        border: 8px solid #2196F3;
+        color: #2196F3;
+    }
+    .team-red {
+        border: 8px solid #F44336;
+        color: #F44336;
+    }
+    /* ==========================================
+       隊伍名稱
+    ========================================== */
+    .team-name {
+        font-size: clamp(2rem, 4.5vw, 3.5rem);
+        line-height: 1.1;
+        margin-bottom: 18px;
+        text-align: center;
+    }
+    /* ==========================================
+       時間
+    ========================================== */
+    .time-display {
+        /*
+         * 這裡是這次最重要的調整
+         * 讓數字呈現圖片中的巨大比例
+         */
+        font-size: clamp(5rem, 10vw, 8.5rem);
+        letter-spacing: 2px;
+        line-height: 0.9;
+        text-align: center;
+        white-space: nowrap;
+    }
+    /* ==========================================
+       時間軸區域
+    ========================================== */
+    .timeline-wrapper {
+        width: 100%;
+        /*
+         * 卡片結束後只留很小的距離
+         */
+        margin-top: 14px;
+        /*
+         * 固定時間軸區域高度
+         */
+        height: 105px;
+        min-height: 105px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+    /* ==========================================
+       時間軸
+    ========================================== */
+    .timeline-bar {
+        width: 100%;
+        /*
+         * 明顯比之前更粗
+         */
+        height: 82px;
+        border-radius: 41px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        overflow: visible;
+        border: 6px solid #000000;
+        background-color: #F44336;
+    }
+    .bar-blue {
+        height: 100%;
+        background-color: #2196F3;
+        border-top-left-radius: 35px;
+        border-bottom-left-radius: 35px;
+        width: 50%;
+        transition: width 0.1s linear;
+    }
+    /* ==========================================
+       🔥
+    ========================================== */
+    .house-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        /*
+         * 大幅放大
+         */
+        font-size: 5.8rem;
+        line-height: 1;
+        transition: left 0.1s linear;
+        z-index: 5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        filter:
+            drop-shadow(4px 0 0 #ffffff)
+            drop-shadow(-4px 0 0 #ffffff)
+            drop-shadow(0 4px 0 #ffffff)
+            drop-shadow(0 -4px 0 #ffffff)
+            drop-shadow(3px 3px 0 #ffffff)
+            drop-shadow(-3px -3px 0 #ffffff)
+            drop-shadow(0px 6px 10px rgba(0,0,0,0.3));
+        pointer-events: none;
+    }
+    /* ==========================================
+       高度較小的 iPad
+    ========================================== */
+    @media (max-height: 800px) {
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: 8px 24px;
-
-            background-color: #ffffff;
-            border-bottom: 2px solid #eeeeee;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-
-            z-index: 10;
-
-            height: 55px;
-            min-height: 55px;
-
-            flex-shrink: 0;
+            height: 60px;
+            min-height: 60px;
+            padding: 7px 24px;
         }
-
         .header h1 {
-            font-size: 1.3rem;
-            color: #222222;
+            font-size: 1.35rem;
         }
-
-        .controls {
-            display: flex;
-            gap: 12px;
-        }
-
         .btn-control {
-            background-color: #f0f0f0;
-            color: #333;
-
-            border: 1px solid #ddd;
-
-            padding: 6px 16px;
-
-            border-radius: 10px;
-
-            font-size: 1.15rem;
-
-            cursor: pointer;
-
-            transition: 0.2s;
+            padding: 7px 15px;
+            font-size: 1rem;
         }
-
-        .btn-control:active {
-            transform: scale(0.95);
-        }
-
-        .btn-pause {
-            background-color: #ff9800;
-            color: #ffffff;
-            border: none;
-        }
-
-
-        /* ========================================
-           主內容區
-        ======================================== */
-
         .main-container {
-            flex: 1;
-            min-height: 0;
-
-            width: 100%;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            /*
-             * 上方 12px
-             * 左右 20px
-             * 下方 12px
-             */
-            padding: 12px 20px;
-
-            /*
-             * 卡片與時間軸的距離
-             * 約等於時間軸厚度
-             */
-            gap: 12px;
-
-            overflow: hidden;
+            padding: 20px 28px 18px;
         }
-
-
-        /* ========================================
-           隊伍計時器
-        ======================================== */
-
         .teams-wrapper {
-            display: flex;
-
-            width: 100%;
-
-            /*
-             * 不再吃滿剩餘高度
-             * 讓計時器區縮小
-             */
-            flex: 0 0 66%;
-
-            min-height: 0;
-
-            gap: 16px;
+            flex-basis: 60%;
+            gap: 28px;
         }
-
-        .team-card {
-            flex: 1;
-            min-width: 0;
-            min-height: 0;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 20px;
-
-            cursor: pointer;
-
-            transition: transform 0.1s;
-
-            background-color: #ffffff;
-
-            padding: 10px 0;
-        }
-
-        .team-card:active {
-            transform: scale(0.98);
-        }
-
-        .team-blue {
-            border: 8px solid #2196F3;
-            color: #2196F3;
-        }
-
-        .team-red {
-            border: 8px solid #F44336;
-            color: #F44336;
-        }
-
-
-        /* 隊伍名稱 */
-
         .team-name {
-            font-size: 2.5rem;
-
-            line-height: 1.1;
-
-            margin-bottom: 5px;
-
-            text-align: center;
+            font-size: 2.6rem;
+            margin-bottom: 12px;
         }
-
-
-        /* ========================================
-           時間數字
-        ======================================== */
-
         .time-display {
-            /*
-             * 比上一版再放大
-             */
             font-size: 6.8rem;
-
-            letter-spacing: 2px;
-
-            line-height: 1;
-
-            text-align: center;
         }
-
-
-        /* ========================================
-           時間軸
-        ======================================== */
-
         .timeline-wrapper {
-            width: 100%;
-
-            /*
-             * 剩餘空間全部給時間軸區域
-             */
-            flex: 1 1 auto;
-
-            min-height: 0;
-
-            display: flex;
-            align-items: center;
-
-            position: relative;
-
-            /*
-             * 不再額外增加上下空間
-             */
-            padding: 0;
+            margin-top: 10px;
+            height: 92px;
+            min-height: 92px;
         }
-
         .timeline-bar {
-            width: 100%;
-
-            /*
-             * 上一版 50px
-             * 現在約 2 倍
-             */
-            height: 90px;
-
-            border-radius: 45px;
-
-            position: relative;
-
-            display: flex;
-            align-items: center;
-
-            overflow: visible;
-
-            border: 5px solid #000000;
-
-            background-color: #F44336;
+            height: 72px;
+            border-radius: 36px;
         }
-
         .bar-blue {
-            height: 100%;
-
-            background-color: #2196F3;
-
-            border-top-left-radius: 40px;
-            border-bottom-left-radius: 40px;
-
-            width: 50%;
-
-            transition: width 0.1s linear;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
         }
-
-
-        /* ========================================
-           🔥 中央圖示
-        ======================================== */
-
         .house-icon {
-            position: absolute;
-
-            top: 50%;
-            left: 50%;
-
-            transform: translate(-50%, -50%);
-
-            /*
-             * 明顯放大
-             */
-            font-size: 5rem;
-
-            line-height: 1;
-
-            transition: left 0.1s linear;
-
-            z-index: 5;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            filter:
-                drop-shadow(3px 0 0 #ffffff)
-                drop-shadow(-3px 0 0 #ffffff)
-                drop-shadow(0 3px 0 #ffffff)
-                drop-shadow(0 -3px 0 #ffffff)
-                drop-shadow(2px 2px 0 #ffffff)
-                drop-shadow(-2px -2px 0 #ffffff)
-                drop-shadow(0px 5px 8px rgba(0,0,0,0.3));
-
-            pointer-events: none;
+            font-size: 5.1rem;
         }
-
-
-        /* ========================================
-           iPad 高度較小時
-        ======================================== */
-
-        @media (max-height: 800px) {
-
-            .main-container {
-                padding: 10px 20px;
-                gap: 10px;
-            }
-
-            .teams-wrapper {
-                /*
-                 * 高度較矮時再縮小
-                 */
-                flex-basis: 64%;
-            }
-
-            .team-name {
-                font-size: 2.2rem;
-            }
-
-            .time-display {
-                font-size: 6rem;
-            }
-
-            .timeline-bar {
-                height: 75px;
-                border-radius: 38px;
-            }
-
-            .bar-blue {
-                border-top-left-radius: 33px;
-                border-bottom-left-radius: 33px;
-            }
-
-            .house-icon {
-                font-size: 4.3rem;
-            }
+    }
+    /* ==========================================
+       iPad 橫向較矮
+    ========================================== */
+    @media (orientation: landscape) and (max-height: 600px) {
+        .header {
+            height: 50px;
+            min-height: 50px;
+            padding: 5px 20px;
         }
-
-
-        /* ========================================
-           iPad 橫向
-        ======================================== */
-
-        @media (orientation: landscape) and (max-height: 600px) {
-
-            .header {
-                height: 50px;
-                min-height: 50px;
-
-                padding: 6px 20px;
-            }
-
-            .header h1 {
-                font-size: 1.1rem;
-            }
-
-            .btn-control {
-                font-size: 1rem;
-                padding: 5px 12px;
-            }
-
-            .main-container {
-                padding: 8px 16px;
-                gap: 8px;
-            }
-
-            .teams-wrapper {
-                flex-basis: 62%;
-            }
-
-            .team-name {
-                font-size: 1.8rem;
-            }
-
-            .time-display {
-                font-size: 4.8rem;
-            }
-
-            .timeline-bar {
-                height: 60px;
-                border-radius: 30px;
-            }
-
-            .bar-blue {
-                border-top-left-radius: 25px;
-                border-bottom-left-radius: 25px;
-            }
-
-            .house-icon {
-                font-size: 3.6rem;
-            }
-        }
-
-
-        /* ========================================
-           設定 Modal
-        ======================================== */
-
-        .modal {
-            display: none;
-
-            position: fixed;
-
-            top: 0;
-            left: 0;
-
-            width: 100%;
-            height: 100%;
-
-            background: rgba(0,0,0,0.6);
-
-            backdrop-filter: blur(3px);
-
-            justify-content: center;
-            align-items: center;
-
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: #ffffff;
-            color: #333333;
-
-            padding: 25px;
-
-            border-radius: 16px;
-
-            width: 320px;
-
-            display: flex;
-            flex-direction: column;
-
-            gap: 18px;
-
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .modal-content input {
-            border: 1px solid #ccc;
-
-            border-radius: 6px;
-
-            padding: 6px;
-
+        .header h1 {
             font-size: 1.1rem;
-
-            font-family: sans-serif;
         }
-
-    </style>
+        .btn-control {
+            font-size: 0.95rem;
+            padding: 5px 12px;
+        }
+        .main-container {
+            padding: 12px 20px 12px;
+        }
+        .teams-wrapper {
+            flex-basis: 60%;
+            gap: 20px;
+        }
+        .team-card {
+            border-radius: 18px;
+            border-width: 7px;
+        }
+        .team-name {
+            font-size: 2rem;
+            margin-bottom: 7px;
+        }
+        .time-display {
+            font-size: 5rem;
+        }
+        .timeline-wrapper {
+            margin-top: 7px;
+            height: 68px;
+            min-height: 68px;
+        }
+        .timeline-bar {
+            height: 56px;
+            border-radius: 28px;
+            border-width: 5px;
+        }
+        .bar-blue {
+            border-top-left-radius: 23px;
+            border-bottom-left-radius: 23px;
+        }
+        .house-icon {
+            font-size: 4rem;
+        }
+    }
+    /* ==========================================
+       設定 Modal
+    ========================================== */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(3px);
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+    }
+    .modal-content {
+        background: #ffffff;
+        color: #333333;
+        padding: 25px;
+        border-radius: 16px;
+        width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal-content input {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 6px;
+        font-size: 1.1rem;
+        font-family: sans-serif;
+    }
+</style>
 </head>
-
-
 <body>
-
-    <!-- ========================================
-         頂部列
-    ======================================== -->
-
-    <div class="header">
-
-        <h1>WenTeam Timer</h1>
-
-        <div class="controls">
-
-            <button
-                class="btn-control btn-pause"
-                id="pauseBtn"
-                onclick="togglePause()">
-                開始遊戲
-            </button>
-
-            <button
-                class="btn-control"
-                onclick="openSettings()">
-                設定
-            </button>
-
-            <button
-                class="btn-control"
-                onclick="resetGame()">
-                重置
-            </button>
-
-        </div>
-
+<!-- ==========================================
+     頂部
+========================================== -->
+<div class="header">
+    <h1>WenTeam Timer</h1>
+    <div class="controls">
+        <button
+            class="btn-control btn-pause"
+            id="pauseBtn"
+            onclick="togglePause()">
+            開始遊戲
+        </button>
+        <button
+            class="btn-control"
+            onclick="openSettings()">
+            設定
+        </button>
+        <button
+            class="btn-control"
+            onclick="resetGame()">
+            重置
+        </button>
     </div>
-
-
-    <!-- ========================================
-         主內容
-    ======================================== -->
-
-    <div class="main-container">
-
-        <!-- 隊伍計時器 -->
-
-        <div class="teams-wrapper">
-
+</div>
+<!-- ==========================================
+     主內容
+========================================== -->
+<div class="main-container">
+    <div class="teams-wrapper">
+        <div
+            class="team-card team-blue"
+            onclick="passTurn('blue')">
+            <div class="team-name">
+                藍隊
+            </div>
             <div
-                class="team-card team-blue"
-                onclick="passTurn('blue')">
-
-                <div class="team-name">
-                    藍隊
-                </div>
-
-                <div
-                    class="time-display"
-                    id="blueTime">
-                    30.0
-                </div>
-
+                class="time-display"
+                id="blueTime">
+                30.0
             </div>
-
-
+        </div>
+        <div
+            class="team-card team-red"
+            onclick="passTurn('red')">
+            <div class="team-name">
+                紅隊
+            </div>
             <div
-                class="team-card team-red"
-                onclick="passTurn('red')">
-
-                <div class="team-name">
-                    紅隊
-                </div>
-
-                <div
-                    class="time-display"
-                    id="redTime">
-                    30.0
-                </div>
-
+                class="time-display"
+                id="redTime">
+                30.0
             </div>
-
         </div>
-
-
-        <!-- ========================================
-             時間軸
-        ======================================== -->
-
-        <div class="timeline-wrapper">
-
-            <div class="timeline-bar">
-
-                <div
-                    class="bar-blue"
-                    id="barBlue">
-                </div>
-
-                <div
-                    class="house-icon"
-                    id="houseIcon">
-                    🔥
-                </div>
-
+    </div>
+    <!-- 時間軸 -->
+    <div class="timeline-wrapper">
+        <div class="timeline-bar">
+            <div
+                class="bar-blue"
+                id="barBlue">
             </div>
-
+            <div
+                class="house-icon"
+                id="houseIcon">
+                🔥
+            </div>
         </div>
-
     </div>
-
-
-    <!-- ========================================
-         設定 Modal
-    ======================================== -->
-
-    <div
-        class="modal"
-        id="settingsModal">
-
-        <div class="modal-content">
-
-            <h3 style="text-align:center">
-                遊戲設定
-            </h3>
-
-
-            <label
+</div>
+<!-- ==========================================
+     設定
+========================================== -->
+<div
+    class="modal"
+    id="settingsModal">
+    <div class="modal-content">
+        <h3 style="text-align:center">
+            遊戲設定
+        </h3>
+        <label
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+            ">
+            單隊秒數:
+            <input
+                type="number"
+                id="initTimeInput"
+                value="30"
                 style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
+                    width:80px;
+                    text-align:center;
                 ">
-
-                單隊秒數:
-
-                <input
-                    type="number"
-                    id="initTimeInput"
-                    value="30"
-                    style="
-                        width:80px;
-                        text-align:center;
-                    ">
-
-            </label>
-
-
-            <label
+        </label>
+        <label
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+            ">
+            轉移秒數:
+            <input
+                type="number"
+                id="stepTimeInput"
+                value="1"
                 style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
+                    width:80px;
+                    text-align:center;
                 ">
-
-                轉移秒數:
-
-                <input
-                    type="number"
-                    id="stepTimeInput"
-                    value="1"
-                    style="
-                        width:80px;
-                        text-align:center;
-                    ">
-
-            </label>
-
-
-            <button
-                class="btn-control"
-                style="
-                    background-color:#2196F3;
-                    color:#fff;
-                    border:none;
-                    height:45px;
-                    margin-top:5px;
-                "
-                onclick="saveSettings()">
-
-                儲存設定
-
-            </button>
-
-        </div>
-
+        </label>
+        <button
+            class="btn-control"
+            style="
+                background-color:#2196F3;
+                color:#fff;
+                border:none;
+                height:45px;
+                margin-top:5px;
+            "
+            onclick="saveSettings()">
+            儲存設定
+        </button>
     </div>
-
-
-    <!-- ========================================
-         JavaScript
-    ======================================== -->
-
-    <script>
-
-        let initTime = 30;
-
-        let blueTime = 30;
-        let redTime = 30;
-
-        let stepTime = 1;
-
-        let totalTime = 60;
-
-        let activeTeam = 'blue';
-
-        let isRunning = false;
-
-        let timerInterval = null;
-
-
-        const blueTimeEl =
-            document.getElementById('blueTime');
-
-        const redTimeEl =
-            document.getElementById('redTime');
-
-        const barBlueEl =
-            document.getElementById('barBlue');
-
-        const houseIconEl =
-            document.getElementById('houseIcon');
-
-        const pauseBtn =
-            document.getElementById('pauseBtn');
-
-
-        /* ========================================
-           更新畫面
-        ======================================== */
-
-        function updateDisplay() {
-
-            blueTimeEl.textContent =
-                blueTime.toFixed(1);
-
-            redTimeEl.textContent =
-                redTime.toFixed(1);
-
-
-            const bluePercent =
-                (blueTime / totalTime) * 100;
-
-
-            barBlueEl.style.width =
-                bluePercent + "%";
-
-            houseIconEl.style.left =
-                bluePercent + "%";
-        }
-
-
-        /* ========================================
-           開始計時
-        ======================================== */
-
-        function startTimer() {
-
-            if (isRunning) return;
-
-            isRunning = true;
-
-            pauseBtn.textContent =
-                "總暫停";
-
-            pauseBtn.style.backgroundColor =
-                "#ff9800";
-
-
-            timerInterval = setInterval(() => {
-
-                if (activeTeam === 'blue') {
-
-                    blueTime -= 0.1;
-                    redTime += 0.1;
-
-                } else {
-
-                    redTime -= 0.1;
-                    blueTime += 0.1;
-
-                }
-
-
-                if (blueTime <= 0 || redTime <= 0) {
-
-                    if (blueTime <= 0) {
-
-                        blueTime = 0;
-                        redTime = totalTime;
-
-                        alert("紅隊獲勝！");
-
-                    } else {
-
-                        redTime = 0;
-                        blueTime = totalTime;
-
-                        alert("藍隊獲勝！");
-
-                    }
-
-                    resetGame();
-                }
-
-
-                updateDisplay();
-
-            }, 100);
-        }
-
-
-        /* ========================================
-           暫停 / 繼續
-        ======================================== */
-
-        function togglePause() {
-
-            if (isRunning) {
-
-                clearInterval(timerInterval);
-
-                isRunning = false;
-
-                pauseBtn.textContent =
-                    "繼續遊戲";
-
-                pauseBtn.style.backgroundColor =
-                    "#4CAF50";
-
+</div>
+<!-- ==========================================
+     JavaScript
+========================================== -->
+<script>
+    let initTime = 30;
+    let blueTime = 30;
+    let redTime = 30;
+    let stepTime = 1;
+    let totalTime = 60;
+    let activeTeam = 'blue';
+    let isRunning = false;
+    let timerInterval = null;
+    const blueTimeEl =
+        document.getElementById('blueTime');
+    const redTimeEl =
+        document.getElementById('redTime');
+    const barBlueEl =
+        document.getElementById('barBlue');
+    const houseIconEl =
+        document.getElementById('houseIcon');
+    const pauseBtn =
+        document.getElementById('pauseBtn');
+    function updateDisplay() {
+        blueTimeEl.textContent =
+            blueTime.toFixed(1);
+        redTimeEl.textContent =
+            redTime.toFixed(1);
+        const bluePercent =
+            (blueTime / totalTime) * 100;
+        barBlueEl.style.width =
+            bluePercent + "%";
+        houseIconEl.style.left =
+            bluePercent + "%";
+    }
+    function startTimer() {
+        if (isRunning) return;
+        isRunning = true;
+        pauseBtn.textContent =
+            "總暫停";
+        pauseBtn.style.backgroundColor =
+            "#ff9800";
+        timerInterval = setInterval(() => {
+            if (activeTeam === 'blue') {
+                blueTime -= 0.1;
+                redTime += 0.1;
             } else {
-
-                startTimer();
-
+                redTime -= 0.1;
+                blueTime += 0.1;
             }
-        }
-
-
-        /* ========================================
-           轉移回合
-        ======================================== */
-
-        function passTurn(clickedTeam) {
-
-            if (!isRunning) {
-                startTimer();
-            }
-
-
-            if (clickedTeam === activeTeam) {
-
-                if (clickedTeam === 'blue') {
-
-                    activeTeam = 'red';
-
-                    blueTime += stepTime;
-                    redTime -= stepTime;
-
-                } else if (clickedTeam === 'red') {
-
-                    activeTeam = 'blue';
-
-                    redTime += stepTime;
-                    blueTime -= stepTime;
-
-                }
-
-
-                if (blueTime > totalTime) {
-                    blueTime = totalTime;
-                }
-
-                if (redTime > totalTime) {
+            if (blueTime <= 0 || redTime <= 0) {
+                if (blueTime <= 0) {
+                    blueTime = 0;
                     redTime = totalTime;
+                    alert("紅隊獲勝！");
+                } else {
+                    redTime = 0;
+                    blueTime = totalTime;
+                    alert("藍隊獲勝！");
                 }
-
-
-                updateDisplay();
+                resetGame();
             }
-        }
-
-
-        /* ========================================
-           重置
-        ======================================== */
-
-        function resetGame() {
-
+            updateDisplay();
+        }, 100);
+    }
+    function togglePause() {
+        if (isRunning) {
             clearInterval(timerInterval);
-
             isRunning = false;
-
-            blueTime = initTime;
-            redTime = initTime;
-
-            totalTime = initTime * 2;
-
-            activeTeam = 'blue';
-
-
             pauseBtn.textContent =
-                "開始遊戲";
-
+                "繼續遊戲";
             pauseBtn.style.backgroundColor =
-                "#ff9800";
-
-
+                "#4CAF50";
+        } else {
+            startTimer();
+        }
+    }
+    function passTurn(clickedTeam) {
+        if (!isRunning) {
+            startTimer();
+        }
+        if (clickedTeam === activeTeam) {
+            if (clickedTeam === 'blue') {
+                activeTeam = 'red';
+                blueTime += stepTime;
+                redTime -= stepTime;
+            } else if (clickedTeam === 'red') {
+                activeTeam = 'blue';
+                redTime += stepTime;
+                blueTime -= stepTime;
+            }
+            if (blueTime > totalTime) {
+                blueTime = totalTime;
+            }
+            if (redTime > totalTime) {
+                redTime = totalTime;
+            }
             updateDisplay();
         }
-
-
-        /* ========================================
-           開啟設定
-        ======================================== */
-
-        function openSettings() {
-
-            if (isRunning) {
-                togglePause();
-            }
-
-            document.getElementById(
-                'settingsModal'
-            ).style.display = 'flex';
-        }
-
-
-        /* ========================================
-           儲存設定
-        ======================================== */
-
-        function saveSettings() {
-
-            initTime =
-                parseFloat(
-                    document.getElementById(
-                        'initTimeInput'
-                    ).value
-                );
-
-
-            stepTime =
-                parseFloat(
-                    document.getElementById(
-                        'stepTimeInput'
-                    ).value
-                );
-
-
-            document.getElementById(
-                'settingsModal'
-            ).style.display = 'none';
-
-
-            resetGame();
-        }
-
-
-        /* 初始化 */
-
+    }
+    function resetGame() {
+        clearInterval(timerInterval);
+        isRunning = false;
+        blueTime = initTime;
+        redTime = initTime;
+        totalTime = initTime * 2;
+        activeTeam = 'blue';
+        pauseBtn.textContent =
+            "開始遊戲";
+        pauseBtn.style.backgroundColor =
+            "#ff9800";
         updateDisplay();
-
-    </script>
-
+    }
+    function openSettings() {
+        if (isRunning) {
+            togglePause();
+        }
+        document.getElementById(
+            'settingsModal'
+        ).style.display = 'flex';
+    }
+    function saveSettings() {
+        initTime =
+            parseFloat(
+                document.getElementById(
+                    'initTimeInput'
+                ).value
+            );
+        stepTime =
+            parseFloat(
+                document.getElementById(
+                    'stepTimeInput'
+                ).value
+            );
+        document.getElementById(
+            'settingsModal'
+        ).style.display = 'none';
+        resetGame();
+    }
+    updateDisplay();
+</script>
 </body>
 </html>
+```
+
+這次跟你喜歡的圖片，核心比例會比較接近
+
+我把它鎖定成這個視覺關係：
+
+卡片
+
+藍隊
+
+30.0
+
+⬇️ 很短的距離
+
+粗時間軸
+
+🔵🔵🔵🔵🔥🔴🔴🔴🔴
+
+而不是上一版那種：
+
+很高的計時器
+
+很遠
+
+━━━━━━━━━
+
+⸻
+
+還有一點我認為值得直接修正：你現在的 🔥 是系統 Emoji，不同 iPad / Safari 可能會呈現不同字型與比例。 所以如果你要的是剛剛圖片那種「很大、白色描邊、像遊戲 UI 的火焰」，單純放大 font-size 仍然不會 100% 一樣。
+
+如果要做到圖片那種效果，下一版我會建議把 🔥 改成固定 SVG 圖示，這樣在 GitHub Pages 上，不管哪台 iPad 開，火焰的大小、外框、位置都會一致。
