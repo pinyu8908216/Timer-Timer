@@ -177,7 +177,7 @@
             border-bottom-left-radius: 999px;
         }
 
-        /* 🔥 火焰圖示（黑框微調至與時間軸同寬） */
+        /* 🔥 火焰圖示 */
         .house-icon {
             position: absolute;
             top: 50%;
@@ -192,21 +192,17 @@
             will-change: left;
             pointer-events: none;
             
-            /* 調整適中的黑框與白邊強度 */
             filter: 
-                /* 內層白色亮邊 */
                 drop-shadow(3px 0 0 #ffffff) 
                 drop-shadow(-3px 0 0 #ffffff) 
                 drop-shadow(0 3px 0 #ffffff) 
                 drop-shadow(0 -3px 0 #ffffff)
-                /* 外層黑色邊框（對齊時間軸 6px 描邊感） */
                 drop-shadow(3px 0 0 #000000) 
                 drop-shadow(-3px 0 0 #000000) 
                 drop-shadow(0 3px 0 #000000) 
                 drop-shadow(0 -3px 0 #000000)
                 drop-shadow(2px 2px 0 #000000)
                 drop-shadow(-2px -2px 0 #000000)
-                /* 立體陰影 */
                 drop-shadow(0 6px 10px rgba(0,0,0,0.3));
         }
 
@@ -261,11 +257,11 @@
         <div class="teams-wrapper">
             <div class="team-card team-blue" onclick="passTurn('blue')">
                 <div class="team-name">藍隊</div>
-                <div class="time-display" id="blueTime">30.0</div>
+                <div class="time-display" id="blueTime">45.0</div>
             </div>
             <div class="team-card team-red" onclick="passTurn('red')">
                 <div class="team-name">紅隊</div>
-                <div class="time-display" id="redTime">30.0</div>
+                <div class="time-display" id="redTime">45.0</div>
             </div>
         </div>
 
@@ -284,22 +280,23 @@
             <h3 style="text-align:center">遊戲設定</h3>
             <label style="display:flex; justify-content:space-between; align-items:center;">
                 單隊秒數:
-                <input type="number" id="initTimeInput" value="30" style="width:100px;">
+                <input type="number" id="initTimeInput" value="45" step="1" style="width:100px;">
             </label>
             <label style="display:flex; justify-content:space-between; align-items:center;">
                 轉移秒數:
-                <input type="number" id="stepTimeInput" value="1" style="width:100px;">
+                <input type="number" id="stepTimeInput" value="0.1" step="0.1" style="width:100px;">
             </label>
             <button class="btn-control" style="background-color:#0066ff; color:#fff; border:none; height:48px; margin-top:10px;" onclick="saveSettings()">儲存設定</button>
         </div>
     </div>
 
     <script>
-        let initTime = 30;
-        let blueTime = 30;
-        let redTime = 30;
-        let stepTime = 1;
-        let totalTime = 60;
+        // 設定預設值：單隊 45 秒，轉移 0.1 秒
+        let initTime = 45;
+        let blueTime = 45;
+        let redTime = 45;
+        let stepTime = 0.1;
+        let totalTime = 90;
         let activeTeam = 'blue';
         let isRunning = false;
         let timerInterval = null;
@@ -398,7 +395,7 @@
             const newInitTime = parseFloat(document.getElementById('initTimeInput').value);
             const newStepTime = parseFloat(document.getElementById('stepTimeInput').value);
             if (!isNaN(newInitTime) && newInitTime > 0) initTime = newInitTime;
-            if (!isNaN(newStepTime) && newStepTime > 0) stepTime = newStepTime;
+            if (!isNaN(newStepTime) && newStepTime >= 0) stepTime = newStepTime;
             document.getElementById('settingsModal').style.display = 'none';
             resetGame();
         }
