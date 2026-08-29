@@ -175,10 +175,10 @@
             background: #0066ff;
             border-top-left-radius: 999px;
             border-bottom-left-radius: 999px;
-            transition: width 0.1s linear;
+            /* 移除 transition 徹底解決殘影 */
         }
 
-        /* 🔥 火焰圖示 */
+        /* 🔥 火焰圖示（修復殘影 + 新增黑色外框描邊） */
         .house-icon {
             position: absolute;
             top: 50%;
@@ -190,16 +190,26 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: left 0.1s linear;
-            filter: 
-                drop-shadow(4px 0 0 #ffffff) 
-                drop-shadow(-4px 0 0 #ffffff) 
-                drop-shadow(0 4px 0 #ffffff) 
-                drop-shadow(0 -4px 0 #ffffff)
-                drop-shadow(3px 3px 0 #ffffff)
-                drop-shadow(-3px -3px 0 #ffffff)
-                drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+            /* 移除 transition 避免移動殘影，並開啟 GPU 加速 */
+            will-change: left;
             pointer-events: none;
+            
+            /* 雙重描邊：內層白邊 + 最外層黑邊 + 陰影 */
+            filter: 
+                /* 內層白色內描邊 */
+                drop-shadow(3px 0 0 #ffffff) 
+                drop-shadow(-3px 0 0 #ffffff) 
+                drop-shadow(0 3px 0 #ffffff) 
+                drop-shadow(0 -3px 0 #ffffff)
+                /* 外層黑色邊框 */
+                drop-shadow(6px 0 0 #000000) 
+                drop-shadow(-6px 0 0 #000000) 
+                drop-shadow(0 6px 0 #000000) 
+                drop-shadow(0 -6px 0 #000000)
+                drop-shadow(4px 4px 0 #000000)
+                drop-shadow(-4px -4px 0 #000000)
+                /* 底部立體陰影 */
+                drop-shadow(0 8px 12px rgba(0,0,0,0.4));
         }
 
         /* 設定彈窗 */
