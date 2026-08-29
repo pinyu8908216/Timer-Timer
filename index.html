@@ -78,20 +78,21 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 12px 20px;
+            padding: 12px 20px 20px 20px;
             justify-content: space-between;
             align-items: center;
             height: calc(100vh - 55px);
-            gap: 10px;
+            gap: 12px;
+            box-sizing: border-box;
         }
 
-        /* 上半部：固定隊伍卡片（縮減高度避免擠壓底部） */
+        /* 上半部：隊伍卡片（會根據螢幕高度自動彈性調整，不再撐爆畫面） */
         .teams-wrapper {
             display: flex;
             width: 100%;
             flex: 1;
-            max-height: 52vh;
             gap: 16px;
+            min-height: 0; /* 允許垂直方向收縮 */
         }
 
         .team-card {
@@ -104,7 +105,7 @@
             cursor: pointer;
             transition: transform 0.1s;
             background-color: #ffffff;
-            padding: 5px 0;
+            padding: 10px 0;
         }
 
         .team-card:active {
@@ -122,46 +123,46 @@
         }
 
         .team-name {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             line-height: 1.1;
-            margin-bottom: 0px;
+            margin-bottom: 5px;
             text-align: center;
         }
 
         .time-display {
-            font-size: 6.8rem;
+            font-size: 5.8rem;
             letter-spacing: 2px;
             line-height: 1;
             text-align: center;
         }
 
-        /* 下半部：進度條區域（完美收納於畫面內） */
+        /* 下半部：進度條區域（絕對保障完整的顯示空間） */
         .timeline-wrapper {
             width: 100%;
-            padding: 10px 0 15px 0;
+            padding: 5px 0 10px 0;
             display: flex;
             align-items: center;
             position: relative;
-            flex-shrink: 0;
+            flex-shrink: 0; /* 絕不讓下方被裁切 */
         }
 
         .timeline-bar {
             width: 100%;
-            height: 70px;
-            border-radius: 35px;
+            height: 60px;
+            border-radius: 30px;
             position: relative;
             display: flex;
             align-items: center;
             overflow: visible;
-            border: 6px solid #000000;
+            border: 5px solid #000000;
             background-color: #F44336;
         }
 
         .bar-blue {
             height: 100%;
             background-color: #2196F3;
-            border-top-left-radius: 28px;
-            border-bottom-left-radius: 28px;
+            border-top-left-radius: 24px;
+            border-bottom-left-radius: 24px;
             width: 50%;
             transition: width 0.1s linear;
         }
@@ -172,7 +173,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 4.2rem;
+            font-size: 3.8rem;
             line-height: 1;
             transition: left 0.1s linear;
             z-index: 5;
@@ -180,13 +181,13 @@
             justify-content: center;
             align-items: center;
             filter: 
-                drop-shadow(4px 0 0 #ffffff) 
-                drop-shadow(-4px 0 0 #ffffff) 
-                drop-shadow(0 4px 0 #ffffff) 
-                drop-shadow(0 -4px 0 #ffffff)
-                drop-shadow(3px 3px 0 #ffffff)
-                drop-shadow(-3px -3px 0 #ffffff)
-                drop-shadow(0px 6px 10px rgba(0,0,0,0.3));
+                drop-shadow(3px 0 0 #ffffff) 
+                drop-shadow(-3px 0 0 #ffffff) 
+                drop-shadow(0 3px 0 #ffffff) 
+                drop-shadow(0 -3px 0 #ffffff)
+                drop-shadow(2px 2px 0 #ffffff)
+                drop-shadow(-2px -2px 0 #ffffff)
+                drop-shadow(0px 5px 8px rgba(0,0,0,0.3));
             pointer-events: none;
         }
 
